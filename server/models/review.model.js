@@ -1,46 +1,35 @@
-const db = require("../db/config");
+const { getRepository } = require('typeorm');
 
-const save = async (movieName, movieReview) => {
-  const sql = `INSERT INTO reviews (movie_title, movie_review) 
-  VALUES (?,?)`;
+const schema = require('../entity/Review.entity');
 
-  const response = await db.query(sql, [movieName, movieReview]);
+exports.save = async (movieName, movieReview) => {
+	const Review = getRepository(schema);
+	const response = await Review.save({ title: movieName, review: movieReview });
 
-  return response;
+	return response;
 };
 
-const getAll = async () => {
-  const sql = `SELECT * FROM reviews`;
-
-  const response = await db.query(sql);
-
-  console.log(response);
-
-  return response;
+exports.getAll = async () => {
+	const Review = getRepository(schema);
+	const response = Review.find();
+	return response;
 };
 
-const getOne = async (id) => {
-  const sql = `SELECT * FROM reviews WHERE id = ? `;
-
-  const response = await db.query(sql, id);
-
-  return response;
+exports.getOne = async (id) => {
+	const Review = getRepository(schema);
+	const response = await Review.findOne({ id: id });
+	return response;
 };
 
-const updateOne = async (id, movieReview) => {
-  const sql = `UPDATE reviews SET movie_review =? where id = ?`;
+exports.updateOne = async (id, movieReview) => {
+	const Review = getRepository(schema);
+	const response = await Review.update({ id: id }, { review: movieReview });
 
-  const response = await db.query(sql, [movieReview, id]);
-
-  return response;
+	return response;
 };
 
-const deleteOne = async (id) => {
-  const sql = `DELETE FROM reviews WHERE id = ?`;
-
-  const response = await db.query(sql, id);
-
-  return response;
+exports.deleteOne = async (id) => {
+	const Review = getRepository(schema);
+	const response = await Review.delete({ id: id });
+	return response;
 };
-
-module.exports = { save, getAll, getOne, updateOne, deleteOne };

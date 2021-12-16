@@ -1,75 +1,28 @@
-const express = require("express");
+const express = require('express');
 
-const Review =require("../models/review.model")
+const {
+	addReview,
+	getAll,
+	deleteReview,
+	updateReview,
+	getOne,
+} = require('../controller/review.controller');
 
 const router = express.Router();
 
-
 //inserting a review
-router.post("/insert", async (req, res) => {
-  const { movieName,movieReview } = req.body;
-  
- console.log(movieName);
- console.log(movieReview);
-
-  try {
-    const response = await Review.save(movieName,movieReview);
-    res.send(response)
-    
-  } catch (error) {
-    console.log(error);
-    res.send(error.message)
-    
-  }
-  
-});
+router.post('/', addReview);
 
 //getting all the reviews
-router.get("/reviews", async (req, res) => {
- 
-  try {
-    const response = await Review.getAll()
-    res.send(response)
-    
-  } catch (error) {
-    console.log(error);
-    res.send(error.message)
-    
-  }
-});
+router.get('/', getAll);
 
-
+//getting one of the reviews
+router.get('/:id', getOne);
 
 //updating data
-router.put("/update", async (req, res) => {
-  const { id ,  movieReview} = req.body;
-  
- 
-  try {
-    const response = await Review.updateOne(id, movieReview)
-    res.send(response)
-    
-  } catch (error) {
-    console.log(error);
-    res.send(error.message)
-    
-  }
-});
+router.put('/:id', updateReview);
 
 //deleting a review
-router.delete("/review/:id", async (req,res)=>{
+router.delete('/:id', deleteReview);
 
-  const {id} = req.params;
-  try {
-    const response = await Review.deleteOne(id)
-    res.send(response)
-    
-  } catch (error) {
-    console.log(error);
-    res.send(error.message)
-    
-  }
-  
-})
 module.exports = router;
- 
